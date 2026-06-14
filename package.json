@@ -5,6 +5,8 @@
   "scripts": {
     "dev-rsbuild": "rsbuild dev",
     "dev-proxy": "node server.js",
+    "dev-proxy:world-loom": "node server.js 18080",
+    "start:world-loom": "WORLD_LOOM_PROXY_PORT=18080 ALWAYS_MINIMAL_SERVER_UI=true run-p dev-proxy:world-loom dev-rsbuild",
     "start": "run-p dev-proxy dev-rsbuild",
     "start2": "run-p dev-rsbuild",
     "start-metrics": "ENABLE_METRICS=true rsbuild dev",

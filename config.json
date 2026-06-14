@@ -1,38 +1,32 @@
 {
   "version": 1,
-  "defaultHost": "<from-proxy>",
-  "defaultProxy": "https://proxy.mcraft.fun",
+  "defaultHost": "localhost:25565",
+  "defaultProxy": "",
   "mapsProvider": "https://maps.mcraft.fun/",
   "skinTexturesProxy": "",
   "peerJsServer": "",
   "peerJsServerFallback": "https://p2p.mcraft.fun",
+  "allowAutoConnect": true,
+  "appParams": {
+    "ip": "localhost:25565",
+    "version": "1.20.1",
+    "proxy": ":18080",
+    "username": "loom_dev",
+    "autoConnect": "true",
+    "onlyConnect": "true",
+    "connectText": "Connect to World Loom"
+  },
   "promoteServers": [
     {
-      "ip": "wss://play.mcraft.fun"
-    },
-    {
-      "ip": "wss://play.webmc.fun",
-      "name": "WebMC"
-    },
-    {
-      "ip": "wss://ws.fuchsmc.net"
-    },
-    {
-      "ip": "wss://play2.mcraft.fun",
-      "description": "Mirror for play.mcraft.fun"
-    },
-    {
-      "ip": "wss://play3.mcraft.fun",
-      "description": "Mirror for play.mcraft.fun"
-    },
-    {
-      "ip": "wss://play-creative.mcraft.fun",
-      "description": "Might be available soon, stay tuned!"
+      "ip": "localhost:25565",
+      "name": "World Loom Local",
+      "version": "1.20.1",
+      "description": "M3 local server-backed world through the temporary local bridge."
     }
   ],
-  "rightSideText": "A Minecraft client clone in the browser!",
-  "splashText": "Mind the bugs and have fun!",
-  "splashTextFallback": "Welcome!",
+  "rightSideText": "World Loom Online M3 local server-backed client",
+  "splashText": "Connecting to World Loom local server",
+  "splashTextFallback": "World Loom Online",
   "pauseLinks": [
     [
       {
@@ -43,7 +37,7 @@
       }
     ]
   ],
-  "defaultUsername": "mcrafter{0-9999}",
+  "defaultUsername": "loom_dev{0-9999}",
   "mobileButtons": [
     {
       "action": "general.drop",

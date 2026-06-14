@@ -4,6 +4,7 @@ import { useSnapshot } from 'valtio'
 import type { Block } from 'prismarine-block'
 import { getThreeJsRendererMethods } from 'minecraft-renderer/src/three/threeJsMethods'
 import { BlockStateModelInfo } from 'minecraft-renderer/src/mesher-shared/shared'
+import type { WorldRendererCommon } from 'minecraft-renderer/src/lib/worldrendererCommon'
 import { miscUiState } from '../globalState'
 import { getFixedFilesize } from '../downloadAndOpenFile'
 import { options } from '../optionsStorage'
@@ -44,6 +45,7 @@ const DebugOverlayBase = () => {
   const [cursorEntity, setCursorEntity] = useState<Entity | null>(null)
   const [blockInfo, setBlockInfo] = useState<{ customBlockName?: string, modelInfo?: BlockStateModelInfo } | null>(null)
   const [clientTps, setClientTps] = useState(0)
+  const [clientFps, setClientFps] = useState<number | null>(null)
   const [serverTps, setServerTps] = useState(null as null | { value: number, frozen: boolean })
   const minecraftYaw = useRef(0)
   const minecraftQuad = useRef(0)
@@ -100,6 +102,8 @@ const DebugOverlayBase = () => {
     const updateTps = (increment = false) => {
       if (Date.now() - lastTpsReset >= 1000) {
         setClientTps(lastTps)
+        const worldRenderer = window.world as WorldRendererCommon | undefined
+        setClientFps(typeof worldRenderer?.fpsAverage === 'number' ? Math.round(worldRenderer.fpsAverage) : null)
         window.lastTpsArray ??= []
         window.lastTpsArray.push(lastTps)
         lastTps = 0
@@ -192,7 +196,7 @@ const DebugOverlayBase = () => {
       <p>Chunk: {Math.floor(pos.x % 16)} ~ {Math.floor(pos.z % 16)} in {Math.floor(pos.x / 16)} ~ {Math.floor(pos.z / 16)}</p>
       <p>Section: {Math.floor(pos.x / 16) * 16}, {Math.floor(pos.y / 16) * 16}, {Math.floor(pos.z / 16) * 16}</p>
       <p>Packets: {packetsString}</p>
-      <p>Client TPS: {clientTps} {serverTps ? `Server TPS: ${serverTps.value} ${serverTps.frozen ? '(frozen)' : ''}` : ''}</p>
+      <p>Client TPS: {clientTps} {clientFps === null ? '' : `Client FPS: ${clientFps}`} {serverTps ? `Server TPS: ${serverTps.value} ${serverTps.frozen ? '(frozen)' : ''}` : ''}</p>
       <p>Facing (viewer): {bot.entity.yaw.toFixed(3)} {bot.entity.pitch.toFixed(3)}</p>
       <p>Facing (minecraft): {quadsDescription[minecraftQuad.current]} ({minecraftYaw.current.toFixed(1)} {(bot.entity.pitch * -180 / Math.PI).toFixed(1)})</p>
       <p>Light: {blockL} ({skyL} sky)</p>

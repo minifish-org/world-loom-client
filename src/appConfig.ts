@@ -138,6 +138,7 @@ export const loadAppConfig = (appConfig: AppConfig) => {
 
   setStorageDataOnAppConfigLoad(appConfig)
   setWatermarkFromConfig(miscUiState.appConfig)
+  window.dispatchEvent(new CustomEvent('app-config-loaded'))
 }
 
 export const isBundledConfigUsed = !!process.env.INLINED_APP_CONFIG

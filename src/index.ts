@@ -986,26 +986,55 @@ document.body.addEventListener('touchstart', (e) => {
 }, { passive: false })
 // #endregion
 
-// immediate game enter actions: reconnect or URL QS
-const maybeEnterGame = () => {
-  const waitForConfigFsLoad = (fn: () => void) => {
-    let unsubscribe: () => void | undefined
-    const checkDone = () => {
-      if (miscUiState.fsReady && miscUiState.appConfig) {
-        fn()
-        unsubscribe?.()
-        return true
-      }
-      return false
+const waitForConfigFsLoad = (fn: () => void) => {
+  let unsubscribe: () => void | undefined
+  const checkDone = () => {
+    if (miscUiState.fsReady && miscUiState.appConfig) {
+      fn()
+      unsubscribe?.()
+      return true
+    }
+    return false
+  }
+
+  if (!checkDone()) {
+    const text = miscUiState.appConfig ? 'Loading' : 'Loading config'
+    setLoadingScreenStatus(text)
+    unsubscribe = subscribe(miscUiState, checkDone)
+  }
+}
+
+let configuredServerEntryStarted = false
+const maybeEnterConfiguredServer = () => {
+  if (configuredServerEntryStarted || miscUiState.gameLoaded) return false
+  if (!appQueryParams.ip && !appQueryParams.proxy) return false
+  configuredServerEntryStarted = true
+
+  const openServerAction = () => {
+    if (appQueryParams.autoConnect && miscUiState.appConfig?.allowAutoConnect) {
+      void connect({
+        server: appQueryParams.ip,
+        proxy: getCurrentProxy(),
+        botVersion: appQueryParams.version ?? undefined,
+        username: getCurrentUsername()!,
+      })
+      return
     }
 
-    if (!checkDone()) {
-      const text = miscUiState.appConfig ? 'Loading' : 'Loading config'
-      setLoadingScreenStatus(text)
-      unsubscribe = subscribe(miscUiState, checkDone)
+    setLoadingScreenStatus(undefined)
+    if (appQueryParams.onlyConnect || process.env.ALWAYS_MINIMAL_SERVER_UI === 'true') {
+      showModal({ reactType: 'only-connect-server' })
+    } else {
+      showModal({ reactType: 'editServer' })
     }
   }
 
+  waitForConfigFsLoad(openServerAction)
+  return true
+}
+
+// immediate game enter actions: reconnect or URL QS
+const maybeEnterGame = () => {
   const reconnectOptions = sessionStorage.getItem('reconnectOptions') ? JSON.parse(sessionStorage.getItem('reconnectOptions')!) : undefined
 
   if (reconnectOptions) {
@@ -1049,29 +1078,7 @@ const maybeEnterGame = () => {
     return waitForConfigFsLoad(enterSave)
   }
 
-  if (appQueryParams.ip || appQueryParams.proxy) {
-    const openServerAction = () => {
-      if (appQueryParams.autoConnect && miscUiState.appConfig?.allowAutoConnect) {
-        void connect({
-          server: appQueryParams.ip,
-          proxy: getCurrentProxy(),
-          botVersion: appQueryParams.version ?? undefined,
-          username: getCurrentUsername()!,
-        })
-        return
-      }
-
-      setLoadingScreenStatus(undefined)
-      if (appQueryParams.onlyConnect || process.env.ALWAYS_MINIMAL_SERVER_UI === 'true') {
-        showModal({ reactType: 'only-connect-server' })
-      } else {
-        showModal({ reactType: 'editServer' })
-      }
-    }
-
-    // showModal({ reactType: 'empty' })
-    return waitForConfigFsLoad(openServerAction)
-  }
+  if (maybeEnterConfiguredServer()) return
 
   if (appQueryParams.connectPeer) {
     // try to connect to peer
@@ -1127,6 +1134,7 @@ const maybeEnterGame = () => {
 if (!isPlayground) {
   try {
     maybeEnterGame()
+    window.addEventListener('app-config-loaded', maybeEnterConfiguredServer)
   } catch (err) {
     console.error(err)
     alert(`Something went wrong: ${err}`)
