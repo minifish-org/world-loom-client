@@ -10,7 +10,7 @@
   "appParams": {
     "ip": "localhost:25565",
     "version": "1.20.1",
-    "proxy": ":18080",
+    "proxy": ":18081",
     "username": "loom_dev",
     "autoConnect": "true",
     "onlyConnect": "true",
@@ -21,10 +21,10 @@
       "ip": "localhost:25565",
       "name": "World Loom Local",
       "version": "1.20.1",
-      "description": "M3 local server-backed world through the temporary local bridge."
+      "description": "World Loom local server-backed world through the Rust browser bridge."
     }
   ],
-  "rightSideText": "World Loom Online M3 local server-backed client",
+  "rightSideText": "World Loom Online local server-backed client",
   "splashText": "Connecting to World Loom local server",
   "splashTextFallback": "World Loom Online",
   "pauseLinks": [

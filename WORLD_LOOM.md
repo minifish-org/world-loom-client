@@ -1,6 +1,6 @@
-# World Loom Client V0
+# World Loom Client
 
-This fork defaults to the local World Loom server-backed path for V0.
+This fork defaults to the local World Loom server-backed browser path.
 
 ## Default Local Connection
 
@@ -10,10 +10,10 @@ The app config points to:
 server: localhost:25565
 version: 1.20.1
 username: loom_dev
-proxy: :18080
+proxy: :18081
 ```
 
-`proxy: :18080` is the existing `minecraft-web-client` WebSocket-to-TCP bridge served by `server.js`. This bridge is still a V0 gap. It keeps the browser client connected to `world-loom-server` without rewriting the renderer or broad client networking code.
+`proxy: :18081` points at the Rust-owned browser bridge served by `world-loom-server`. The client still uses the existing `minecraft-web-client` proxy protocol, but the target path no longer starts the Node `server.js` bridge.
 
 ## Run With World Loom Defaults
 
@@ -21,11 +21,11 @@ proxy: :18080
 pnpm start:world-loom
 ```
 
-Then open the dev URL printed by Rsbuild. The app should auto-connect to the local `world-loom-server` through the temporary bridge.
+Then open the dev URL printed by Rsbuild. The app should auto-connect to the local `world-loom-server` through the Rust browser bridge.
 
 The default root URL uses `config.json` app params. The app retries entry after async config load so local World Loom defaults can auto-connect without adding query parameters by hand.
 
-## V0 Smoke Tests
+## Smoke Tests
 
 Use distinct usernames when opening more than one browser client against the same local server. The stack-level smoke scripts do this automatically:
 
@@ -35,18 +35,22 @@ Use distinct usernames when opening more than one browser client against the sam
 ../scripts/smoke-m6-mcp.sh
 ```
 
-V0 keeps using the existing client debug/status surfaces. Server tick timing, connected player count, and ping status are sent by `world-loom-server` through the tab list/action bar, while the browser client shows connection ping in `NetworkStatus` and client FPS in the existing debug overlay when the renderer exposes FPS data.
+World Loom keeps using the existing client debug/status surfaces. Server tick timing, connected player count, and ping status are sent by `world-loom-server` through the tab list/action bar, while the browser client shows connection ping in `NetworkStatus` and client FPS in the existing debug overlay when the renderer exposes FPS data.
 
-## Temporary Bridge Replacement Plan
+## Node Bridge Fallback
 
-The V0 target remains server-backed gameplay, but browser traffic still passes through the temporary local bridge. The V1 target architecture is still:
+The old Node bridge remains available only as a fallback/debug path:
 
-```text
-browser client -> WSS endpoint -> world-loom-server
+```sh
+pnpm start:world-loom:node-bridge
 ```
 
-Replace the bridge by moving the browser-facing WebSocket/WSS endpoint into `world-loom-server` or an adjacent Rust-owned transport layer, then remove the default `proxy: :18080` dependency from this client config.
+That fallback serves the bridge on `:18080`. It is no longer the default gameplay path.
+
+## Cloudflare Pages
+
+For the family-play static deployment path, use `PAGES.md`. The Pages build is static and uses `WORLD_LOOM_CLIENT_*` build environment variables to generate `dist/config.json`.
 
 ## Scope Guard
 
-V0 does not rewrite rendering, controls, inventory UI, or Valence core.
+World Loom does not rewrite rendering, controls, inventory UI, or Valence core for this integration slice.

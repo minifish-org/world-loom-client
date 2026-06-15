@@ -76,7 +76,7 @@ if (process.env.CONFIG_JSON) {
 }
 
 if (dev) {
-    configJson.defaultProxy = `:${process.env.WORLD_LOOM_PROXY_PORT || '18080'}`
+    configJson.defaultProxy = `:${process.env.WORLD_LOOM_PROXY_PORT || '18081'}`
 }
 
 applyWatermarkPackagesToConfig(configJson as Record<string, unknown>, path.resolve('pnpm-lock.yaml'))
