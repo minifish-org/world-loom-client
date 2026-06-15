@@ -34,6 +34,8 @@ WORLD_LOOM_CLIENT_SERVER_NAME=World Loom Family
 
 Use a full HTTPS URL for `WORLD_LOOM_CLIENT_PROXY` on Pages. A Pages site is HTTPS, so an insecure `http://` or `ws://` proxy will be blocked by browsers as mixed content. The Rust server still speaks local HTTP/WebSocket; Caddy or Tailscale HTTPS terminates TLS in front of it.
 
+Chrome 142+ also treats Tailscale addresses as local/private network targets when the page is served from public Pages. The client uses `fetch(..., { targetAddressSpace: "local" })` for the proxy connect request so Chrome can show its Local Network Access permission prompt. Family players may need to allow local network access for the Pages site the first time they connect.
+
 Optional overrides:
 
 ```text

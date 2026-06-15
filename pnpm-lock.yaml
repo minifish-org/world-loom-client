@@ -30,6 +30,9 @@ patchedDependencies:
   mineflayer-item-map-downloader@1.2.0:
     hash: a731ebbace2d8790c973ab3a5ba33494a6e9658533a9710dd8ba36f86db061ad
     path: patches/mineflayer-item-map-downloader@1.2.0.patch
+  net-browserify@0.2.4:
+    hash: 11eb0458388a855b751d7c167e53864ebf4baa11e8492ba06aa517173d94413f
+    path: patches/net-browserify@0.2.4.patch
   pixelarticons@1.8.1:
     hash: 533230072bc402f425c86abd3d0356fe087b14cab2a254d93f419b083f2d8dfa
     path: patches/pixelarticons@1.8.1.patch
@@ -166,7 +169,7 @@ importers:
         version: 2.0.4
       net-browserify:
         specifier: github:zardoy/prismarinejs-net-browserify
-        version: https://codeload.github.com/zardoy/prismarinejs-net-browserify/tar.gz/18e867b7befe124a227dde33eeb197718f01222c
+        version: https://codeload.github.com/zardoy/prismarinejs-net-browserify/tar.gz/18e867b7befe124a227dde33eeb197718f01222c(patch_hash=11eb0458388a855b751d7c167e53864ebf4baa11e8492ba06aa517173d94413f)
       node-gzip:
         specifier: ^1.1.2
         version: 1.1.2
@@ -16006,7 +16009,7 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  net-browserify@https://codeload.github.com/zardoy/prismarinejs-net-browserify/tar.gz/18e867b7befe124a227dde33eeb197718f01222c:
+  net-browserify@https://codeload.github.com/zardoy/prismarinejs-net-browserify/tar.gz/18e867b7befe124a227dde33eeb197718f01222c(patch_hash=11eb0458388a855b751d7c167e53864ebf4baa11e8492ba06aa517173d94413f):
     dependencies:
       body-parser: 1.20.3
       express: 4.21.2

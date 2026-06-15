@@ -1,0 +1,160 @@
+diff --git a/browser.js b/browser.js
+index 62d624a..a862fa2 100644
+--- a/browser.js
++++ b/browser.js
+@@ -31,6 +31,13 @@ function getProxyOrigin() {
+ 	}
+ 	return getProxy().protocol + '://' + getProxyHost();
+ }
++function getProxyRequestOrigin() {
++	var requestProtocol = getProxy().requestProtocol;
++	if (!requestProtocol) {
++		requestProtocol = getProxy().protocol === 'wss' ? 'https:' : 'http:';
++	}
++	return requestProtocol + '//' + getProxyHost();
++}
+ function getArtificialDelay() {
+ 	const delay = getProxy().artificialDelay;
+ 	if (Array.isArray(delay) && delay.length === 2) {
+@@ -346,81 +353,83 @@ Socket.prototype.connect = function(options, cb) {
+ 
+ 	let timedOut = false
+ 	let timeout
+-	var req = http.request({
+-		hostname: getProxy().hostname,
+-		port: getProxy().port,
+-		path: getProxy().path + '/connect',
+-		protocol: getProxy().requestProtocol,
+-		method: 'POST',
+-		withCredentials: false,
+-		headers: {
+-			'Content-Type': 'application/json',
+-			...getProxy().headers
++	function handleConnectResponse(statusCode, json) {
++		var data = null;
++		try {
++			data = JSON.parse(json);
++		} catch (e) {
++			data = {
++				code: statusCode,
++				error: json
++			};
+ 		}
+-	}, function (res) {
+-		if (timedOut) return
+-		clearTimeout(timeout)
+ 
+-		var json = '';
+-		res.on('data', function (buf) {
+-			json += buf;
+-		});
+-		res.on('end', function () {
+-			var data = null;
+-			try {
+-				data = JSON.parse(json);
+-			} catch (e) {
+-				data = {
+-					code: res.statusCode,
+-					error: json
+-				};
++		if (data.error !== undefined) {
++			let errorMessage = 'Cannot open TCP connection ['+statusCode+']: '+JSON.stringify(data.error)
++			if (statusCode === 0) {
++				errorMessage = `Cannot reach the proxy server ${getProxy().hostname}:${getProxy().port}`
++			} else if (statusCode === 404) {
++				errorMessage = 'Cannot find the proxy server (404). Check proxy ip you entered.'
+ 			}
+-
+-			if (data.error !== undefined) {
+-				let errorMessage = 'Cannot open TCP connection ['+res.statusCode+']: '+JSON.stringify(data.error)
+-				if (res.statusCode === 0) {
+-					errorMessage = `Cannot reach the proxy server ${getProxy().hostname}:${getProxy().port}`
+-				} else if (res.statusCode === 404) {
+-					errorMessage = 'Cannot find the proxy server (404). Check proxy ip you entered.'
+-				}
+-				if (data.error.code === 'ENOTFOUND') {
+-					errorMessage = 'Cannot find the server. Check server ip you entered.'
+-				}
+-				self.emit('error', errorMessage);
+-				self.destroy();
+-				return;
++			if (data.error.code === 'ENOTFOUND') {
++				errorMessage = 'Cannot find the server. Check server ip you entered.'
+ 			}
++			self.emit('error', errorMessage);
++			self.destroy();
++			return;
++		}
+ 
+-			self.remoteAddress = data.remote.address;
+-			self.remoteFamily = data.remote.family;
+-			self.remotePort = data.remote.port;
++		self.remoteAddress = data.remote.address;
++		self.remoteFamily = data.remote.family;
++		self.remotePort = data.remote.port;
+ 
+-			self._connectWebSocket(data.token, function (err) {
+-				if (err) {
+-					cb(err);
+-					return;
+-				}
++		self._connectWebSocket(data.token, function (err) {
++			if (err) {
++				cb(err);
++				return;
++			}
+ 
+-				cb();
+-			});
++			cb();
+ 		});
+-	});
++	}
++
++	var abortController = typeof AbortController !== 'undefined' ? new AbortController() : null;
+ 	timeout = setTimeout(() => {
+ 		if (!timedOut) {
+ 			timedOut = true
+-			req.xhr.abort()
++			if (abortController) abortController.abort()
+ 			self.emit('error', `Timeout for connecting to proxy ${getProxy().hostname}:${getProxy().port}. Make sure it is reachable: try opening it in your browser or use alternative proxy server.`)
+ 			self.destroy()
+ 		}
+ 	}, 10_000)
+ 
+-	req.setHeader('Content-Type', 'application/json');
+-	// Set additional headers from proxy configuration
+-	Object.entries(getProxy().headers).forEach(([key, value]) => {
+-		req.setHeader(key, value);
++	var connectRequestOptions = {
++		method: 'POST',
++		credentials: 'omit',
++		headers: {
++			'Content-Type': 'application/json',
++			...getProxy().headers
++		},
++		body: JSON.stringify(options),
++		signal: abortController ? abortController.signal : undefined
++	}
++	if (window.location.protocol === 'https:' && getProxyRequestOrigin().startsWith('https://')) {
++		// Chrome 142+ gates public-site requests to Tailscale/private hosts behind
++		// Local Network Access. XHR cannot set this, but fetch can trigger the prompt.
++		connectRequestOptions.targetAddressSpace = 'local'
++	}
++
++	fetch(getProxyRequestOrigin() + getProxy().path + '/connect', connectRequestOptions).then(function (res) {
++		if (timedOut) return
++		clearTimeout(timeout)
++		return res.text().then(function (json) {
++			handleConnectResponse(res.status, json)
++		})
++	}).catch(function () {
++		if (timedOut) return
++		clearTimeout(timeout)
++		handleConnectResponse(0, JSON.stringify({ error: 'Network error' }))
+ 	});
+-	req.write(JSON.stringify(options));
+-	req.end();
+ 
+ 	return this;
+ };
