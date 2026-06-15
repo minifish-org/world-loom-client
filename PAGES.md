@@ -17,9 +17,9 @@ Node version: 22
 Package manager: pnpm 10.32.1
 ```
 
-`wrangler.jsonc` records the same output directory for local Wrangler usage, but the preferred V1.2 path is Pages Git integration.
-
 The build command should be `pnpm build:world-loom:pages`. As a safety net, normal Cloudflare Pages builds also read the same `WORLD_LOOM_CLIENT_*` variables, but using the explicit World Loom build command makes the intent clear in the dashboard.
+
+Do not commit an active `wrangler.jsonc` / `wrangler.toml` Pages configuration file for the Git integration path unless it contains the full production configuration. Cloudflare treats a Wrangler configuration file with `pages_build_output_dir` as the source of truth, which can prevent dashboard environment variables from reaching the build.
 
 ## Production Environment Variables
 
