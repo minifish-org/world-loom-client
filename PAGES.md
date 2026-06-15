@@ -19,6 +19,8 @@ Package manager: pnpm 10.32.1
 
 `wrangler.jsonc` records the same output directory for local Wrangler usage, but the preferred V1.2 path is Pages Git integration.
 
+The build command should be `pnpm build:world-loom:pages`. As a safety net, normal Cloudflare Pages builds also read the same `WORLD_LOOM_CLIENT_*` variables, but using the explicit World Loom build command makes the intent clear in the dashboard.
+
 ## Production Environment Variables
 
 Set these in the Pages project under Settings -> Environment variables.
@@ -46,7 +48,7 @@ WORLD_LOOM_CLIENT_CONNECT_TEXT=Connect to World Loom
 WORLD_LOOM_CLIENT_DESCRIPTION=World Loom family server through the Rust browser bridge.
 ```
 
-Advanced fallback: `CONFIG_JSON` is still supported by `rsbuild.config.ts`, but `pnpm build:world-loom:pages` is the normal V1.2 path because it turns the simple `WORLD_LOOM_CLIENT_*` variables above into `dist/config.json`.
+Advanced fallback: `CONFIG_JSON` is still supported by `rsbuild.config.ts`, but `pnpm build:world-loom:pages` is the normal V1.2 path because it turns the simple `WORLD_LOOM_CLIENT_*` variables above into `dist/config.json`. If Cloudflare accidentally runs plain `pnpm build`, the build still applies `WORLD_LOOM_CLIENT_*` when `CF_PAGES=1`.
 
 Cloudflare Pages builds fail fast when `WORLD_LOOM_CLIENT_PROXY` is missing, and print the selected proxy in the build log:
 

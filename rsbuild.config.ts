@@ -54,7 +54,7 @@ if (fs.existsSync('./assets/release.json')) {
 
 const configJson = JSON.parse(fs.readFileSync('./config.json', 'utf8'))
 
-// Precedence (last write wins): base config.json → LOCAL_CONFIG_FILE → CONFIG_JSON (CI / PR)
+// Precedence (last write wins): base config.json → LOCAL_CONFIG_FILE → CONFIG_JSON (CI / PR) or WORLD_LOOM_CLIENT_* on Pages
 try {
     const localConfigFile = process.env.LOCAL_CONFIG_FILE || './config.local.json'
     if (fs.existsSync(localConfigFile)) {
@@ -73,6 +73,16 @@ if (process.env.CONFIG_JSON) {
     } catch (err) {
         console.warn('Failed to parse CONFIG_JSON env var:', err)
     }
+}
+
+if (!process.env.CONFIG_JSON && process.env.CF_PAGES === '1') {
+    const pagesConfigJson = childProcess.execFileSync('node', ['scripts/worldLoomPagesConfig.mjs'], {
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'inherit'],
+    })
+    const pagesConfig = JSON.parse(pagesConfigJson)
+    Object.assign(configJson, pagesConfig)
+    console.log('Applied config from WORLD_LOOM_CLIENT_* env vars:', Object.keys(pagesConfig).join(', '))
 }
 
 if (dev) {
