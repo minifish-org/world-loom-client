@@ -38,6 +38,7 @@ const config = {
     autoConnect: 'true',
     onlyConnect: 'true',
     connectText,
+    worldLoomProtocolCompat: 'true',
   },
   promoteServers: [
     {

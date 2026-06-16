@@ -48,6 +48,7 @@ export type AppQsParams = {
   testCrashApp?: string
   onlyConnect?: string
   connectText?: string
+  worldLoomProtocolCompat?: string
   freezeSettings?: string
   testIosCrash?: string
   addPing?: string

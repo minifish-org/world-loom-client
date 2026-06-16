@@ -14,7 +14,8 @@
     "username": "loom_dev",
     "autoConnect": "true",
     "onlyConnect": "true",
-    "connectText": "Connect to World Loom"
+    "connectText": "Connect to World Loom",
+    "worldLoomProtocolCompat": "true"
   },
   "promoteServers": [
     {
