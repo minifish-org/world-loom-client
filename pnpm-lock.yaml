@@ -5,22 +5,22 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  mineflayer: github:zardoy/mineflayer#gen-the-master
+  mineflayer: github:zardoy/mineflayer#6fe34e32c19657020cc48d95039e4b89361200b2
   '@nxg-org/mineflayer-physics-util': 1.8.19
   buffer: ^6.0.3
   vec3: 0.1.10
   three: 0.154.0
   '@types/three': 0.154.0
-  diamond-square: github:zardoy/diamond-square
-  prismarine-block: github:zardoy/prismarine-block#next-era
-  prismarine-world: github:zardoy/prismarine-world#next-era
+  diamond-square: github:zardoy/diamond-square#cfaad2d1d5909fdfa63c8cc7bc05fb5e87782d71
+  prismarine-block: github:zardoy/prismarine-block#401a296892fbde312ade34685fdc2db3d31668ad
+  prismarine-world: github:zardoy/prismarine-world#ab2146c9933eef3247c3f64446de4ccc2c484c7c
   minecraft-data: 3.105.0
-  prismarine-provider-anvil: github:zardoy/prismarine-provider-anvil#everything
-  prismarine-physics: github:zardoy/prismarine-physics
-  minecraft-protocol: github:PrismarineJS/node-minecraft-protocol#master
+  prismarine-provider-anvil: github:zardoy/prismarine-provider-anvil#c4c47c0ffcc6cebcc85a414d73b1795cbfa2c6b9
+  prismarine-physics: github:zardoy/prismarine-physics#353e25b800149393f40539ec381218be44cbb03b
+  minecraft-protocol: github:PrismarineJS/node-minecraft-protocol#ee40987dde124cd2f560bb944cfffb29946fef81
   react: ^18.2.0
-  prismarine-chunk: github:zardoy/prismarine-chunk#master
-  prismarine-item: latest
+  prismarine-chunk: github:zardoy/prismarine-chunk#1eb3a5d85dffe18b7b504c6e5871c4b36681df1a
+  prismarine-item: 1.18.0
   valtio: 1.13.2
 
 patchedDependencies:
@@ -87,7 +87,7 @@ importers:
         specifier: ^0.5.12
         version: 0.5.16
       browserfs:
-        specifier: github:zardoy/browserfs#build
+        specifier: github:zardoy/browserfs#e60ca69e74888e057a96a468afe1d62347d3f56f
         version: https://codeload.github.com/zardoy/browserfs/tar.gz/e60ca69e74888e057a96a468afe1d62347d3f56f
       change-case:
         specifier: ^5.1.2
@@ -135,7 +135,7 @@ importers:
         specifier: ^11.1.1
         version: 11.3.0
       google-drive-browserfs:
-        specifier: github:zardoy/browserfs#google-drive
+        specifier: github:zardoy/browserfs#ab58ae8ef00e3a31db01909e365e6cb5188436e0
         version: browserfs@https://codeload.github.com/zardoy/browserfs/tar.gz/ab58ae8ef00e3a31db01909e365e6cb5188436e0
       jszip:
         specifier: ^3.10.1
@@ -156,19 +156,19 @@ importers:
         specifier: ^0.1.47
         version: 0.1.47(@xmcl/text-component@2.1.3)(mc-assets@0.2.72)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       minecraft-protocol:
-        specifier: github:PrismarineJS/node-minecraft-protocol#master
+        specifier: github:PrismarineJS/node-minecraft-protocol#ee40987dde124cd2f560bb944cfffb29946fef81
         version: https://codeload.github.com/PrismarineJS/node-minecraft-protocol/tar.gz/ee40987dde124cd2f560bb944cfffb29946fef81(patch_hash=a0fc92234601e93b1e536d8d7cc9bf80a9df670d821e1d12746f261d15954fae)(encoding@0.1.13)
       minecraft-renderer:
         specifier: ^0.1.71
         version: 0.1.71(@types/react@18.3.18)(contro-max@0.1.12(typescript@5.5.4))(mc-assets@0.2.72)(minecraft-data@3.105.0)(react@18.3.1)(three@0.154.0)
       mineflayer-item-map-downloader:
-        specifier: github:zardoy/mineflayer-item-map-downloader
+        specifier: github:zardoy/mineflayer-item-map-downloader#a8d210ecdcf78dd082fa149a96e1612cc9747824
         version: https://codeload.github.com/zardoy/mineflayer-item-map-downloader/tar.gz/a8d210ecdcf78dd082fa149a96e1612cc9747824(patch_hash=a731ebbace2d8790c973ab3a5ba33494a6e9658533a9710dd8ba36f86db061ad)(encoding@0.1.13)
       mojangson:
         specifier: ^2.0.4
         version: 2.0.4
       net-browserify:
-        specifier: github:zardoy/prismarinejs-net-browserify
+        specifier: github:zardoy/prismarinejs-net-browserify#18e867b7befe124a227dde33eeb197718f01222c
         version: https://codeload.github.com/zardoy/prismarinejs-net-browserify/tar.gz/18e867b7befe124a227dde33eeb197718f01222c(patch_hash=11eb0458388a855b751d7c167e53864ebf4baa11e8492ba06aa517173d94413f)
       node-gzip:
         specifier: ^1.1.2
@@ -183,7 +183,7 @@ importers:
         specifier: ^6.1.1
         version: 6.1.1
       prismarine-provider-anvil:
-        specifier: github:zardoy/prismarine-provider-anvil#everything
+        specifier: github:zardoy/prismarine-provider-anvil#c4c47c0ffcc6cebcc85a414d73b1795cbfa2c6b9
         version: https://codeload.github.com/zardoy/prismarine-provider-anvil/tar.gz/c4c47c0ffcc6cebcc85a414d73b1795cbfa2c6b9(minecraft-data@3.105.0)
       prosemirror-example-setup:
         specifier: ^1.2.2
@@ -355,7 +355,7 @@ importers:
         specifier: ^0.2.72
         version: 0.2.72
       mineflayer:
-        specifier: github:zardoy/mineflayer#gen-the-master
+        specifier: github:zardoy/mineflayer#6fe34e32c19657020cc48d95039e4b89361200b2
         version: https://codeload.github.com/zardoy/mineflayer/tar.gz/6fe34e32c19657020cc48d95039e4b89361200b2(encoding@0.1.13)
       mineflayer-mouse:
         specifier: 0.1.28
@@ -373,7 +373,7 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0
       process:
-        specifier: github:PrismarineJS/node-process
+        specifier: github:PrismarineJS/node-process#380d0b4f4c86f1b65b216c311bf00431f314e88e
         version: https://codeload.github.com/PrismarineJS/node-process/tar.gz/380d0b4f4c86f1b65b216c311bf00431f314e88e
       rimraf:
         specifier: ^5.0.1
