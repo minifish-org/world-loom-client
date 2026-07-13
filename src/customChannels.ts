@@ -8,6 +8,8 @@ import { registerIframeChannels } from './core/iframeChannels'
 import { serverSafeSettings } from './defaultOptions'
 import { lastConnectOptions } from './appStatus'
 import { gameAdditionalState } from './globalState'
+import { registerWorldLoomAssetChannels } from './worldLoomAssets'
+import { appQueryParams } from './appParams'
 
 const isWebSocketServer = (server: string | undefined) => {
   if (!server) return false
@@ -21,20 +23,25 @@ const getIsCustomChannelsEnabled = () => {
 
 export default () => {
   customEvents.on('mineflayerBotCreated', async () => {
-    if (!getIsCustomChannelsEnabled()) return
+    const customChannelsEnabled = getIsCustomChannelsEnabled()
+    const worldLoomChannelsEnabled = appQueryParams.worldLoomProtocolCompat === 'true'
+    if (!customChannelsEnabled && !worldLoomChannelsEnabled) return
     bot.once('login', () => {
-      registerConnectMetadataChannel()
-      registerBlockModelsChannel()
-      registerMediaChannels()
-      registerSectionAnimationChannels()
-      registeredJeiChannel()
-      registerBlockInteractionsCustomizationChannel()
-      registerWaypointChannels()
-      registerFireworksChannels()
-      registerIdeChannels()
-      registerIframeChannels()
-      registerServerSettingsChannel()
-      registerTypingIndicatorChannel()
+      if (customChannelsEnabled) {
+        registerConnectMetadataChannel()
+        registerBlockModelsChannel()
+        registerMediaChannels()
+        registerSectionAnimationChannels()
+        registeredJeiChannel()
+        registerBlockInteractionsCustomizationChannel()
+        registerWaypointChannels()
+        registerFireworksChannels()
+        registerIdeChannels()
+        registerIframeChannels()
+        registerServerSettingsChannel()
+        registerTypingIndicatorChannel()
+      }
+      if (worldLoomChannelsEnabled) registerWorldLoomAssetChannels()
     })
   })
 }
