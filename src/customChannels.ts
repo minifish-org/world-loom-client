@@ -8,8 +8,6 @@ import { registerIframeChannels } from './core/iframeChannels'
 import { serverSafeSettings } from './defaultOptions'
 import { lastConnectOptions } from './appStatus'
 import { gameAdditionalState } from './globalState'
-import { registerWorldLoomAssetChannels } from './worldLoomAssets'
-import { appQueryParams } from './appParams'
 
 const isWebSocketServer = (server: string | undefined) => {
   if (!server) return false
@@ -24,8 +22,7 @@ const getIsCustomChannelsEnabled = () => {
 export default () => {
   customEvents.on('mineflayerBotCreated', async () => {
     const customChannelsEnabled = getIsCustomChannelsEnabled()
-    const worldLoomChannelsEnabled = appQueryParams.worldLoomProtocolCompat === 'true'
-    if (!customChannelsEnabled && !worldLoomChannelsEnabled) return
+    if (!customChannelsEnabled) return
     bot.once('login', () => {
       if (customChannelsEnabled) {
         registerConnectMetadataChannel()
@@ -41,7 +38,6 @@ export default () => {
         registerServerSettingsChannel()
         registerTypingIndicatorChannel()
       }
-      if (worldLoomChannelsEnabled) registerWorldLoomAssetChannels()
     })
   })
 }
